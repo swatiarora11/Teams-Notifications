@@ -36,11 +36,39 @@ Follow these steps to create the app registration:
     * Specify who can use the application. Select "Accounts in this organizational directory only" option for **Supported account types**.
     * Don't enter anything for **Redirect URI (optional)**.
     * Select **Register** to complete the initial app registration.
-<p> <img src="images/register_aad_app.png" />
+<p> <img src="images/aad_app_register.png" />
 
-When registration finishes, the Azure portal displays the app registration's **Overview** pane. You see the **Application (client) ID**. Also called the **client ID**, this value uniquely identifies your application in the Microsoft identity platform. Copy the **Application (client) ID**; we will need it later. Verify that the **Supported account types** is set to "Single organization".
+1. When registration finishes, the Azure portal displays the app registration's **Overview** pane. You see the **Application (client) ID**. Also called the **client ID**, this value uniquely identifies your application in the Microsoft identity platform. Verify that the **Supported account types** is set to "Single organization". Copy the **Application (client) ID**; we will need it later. 
 
 <p> <img src="images/aad_app_overview.png" />
+
+1. On the side rail in the **Manage** section, navigate to the **Certificates & secrets** section. In the Client secrets section, click on **+ New client secret**. Add a description for the secret, and choose when the secret will expire. Click **Add**.
+
+<p> <img src="images/aad_app_secret.png" />
+
+1. Once the **Client secret** is created, copy its value; At this point you should have values of **Client secret**, **Directory (tenant) ID**, **Application (client) Id**. We will need these values later. 
+1. Under **API Permissions**, select **Add a permission**. Under **Select an API**, select particular service and give following permissions,
+    * Under **Commonly used Microsoft APIs**, Select “Microsoft Graph”, then select following permissions under **Delegated permissions** section,
+        * Chat.Read
+        * Chat.ReadBasic
+        * Chat.ReadWrite
+        * TeamsActivity.Read
+        * TeamsActivity.Send
+        * User.Read
+        * UserActivity.ReadWrite.Created
+    * Under **Application Permissions**, select the following,
+        * Directory.Read.All
+        * Directory.ReadWrite.All
+        * TeamsActivity.Read.All
+        * TeamsAcitvity.Send
+        * User.Read.All
+        * User.ReadWrite.All
+    * Click on **Add Permissions** to save your changes.
+
+<p> <img src="images/aad_app_api_perm1.png" />
+<p> <img src="images/aad_app_api_perm2.png" />
+
+If you are logged in as tenant administrator, click on “Grant admin consent for %tenant-name%”, else inform your tenant administrator to do the same.
 
 ### Step 2: Setup SharePoint Online
 
