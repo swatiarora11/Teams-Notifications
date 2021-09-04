@@ -47,8 +47,8 @@ Follow these steps to create the app registration:
 <p> <img src="images/aad_app_secret.png" />
 
 6. Once the **Client secret** is created, copy its value; At this point you should have values of **Client secret**, **Directory (tenant) ID**, **Application (client) Id**. We will need these values later. 
-7. Under **API Permissions**, select **Add a permission**. Under **Select an API**, select particular service and give following permissions,
-    * Under **Commonly used Microsoft APIs**, Select “Microsoft Graph”, then select following permissions under **Delegated permissions** section,
+7. Under **API Permissions** > **Add a permission** > **Select an API** >  **Commonly used Microsoft APIs**, select “Microsoft Graph” and give following permissions,
+    * Under **Delegated permissions**,
         * Chat.Read
         * Chat.ReadBasic
         * Chat.ReadWrite
@@ -56,7 +56,7 @@ Follow these steps to create the app registration:
         * TeamsActivity.Send
         * User.Read
         * UserActivity.ReadWrite.Created
-    * Under **Application Permissions**, select the following,
+    * Under **Application Permissions**,
         * Directory.Read.All
         * Directory.ReadWrite.All
         * TeamsActivity.Read.All
