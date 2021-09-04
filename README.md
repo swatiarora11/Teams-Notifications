@@ -30,24 +30,24 @@ Registering your application establishes a trust relationship between your app a
 
 Follow these steps to create the app registration:
 1. Sign in to the [Azure portal.](https://portal.azure.com/)
-1. Search for and select Azure Active Directory.
-1. Under **Manage**, select **App registrations** > **New registration**.
+2. Search for and select Azure Active Directory.
+3. Under **Manage**, select **App registrations** > **New registration**.
     * Enter a display **Name** for your application for e.g. **TeamsNotifications**. 
     * Specify who can use the application. Select "Accounts in this organizational directory only" option for **Supported account types**.
     * Don't enter anything for **Redirect URI (optional)**.
     * Select **Register** to complete the initial app registration.
 <p> <img src="images/aad_app_register.png" />
 
-1. When registration finishes, the Azure portal displays the app registration's **Overview** pane. You see the **Application (client) ID**. Also called the **client ID**, this value uniquely identifies your application in the Microsoft identity platform. Verify that the **Supported account types** is set to "Single organization". Copy the **Application (client) ID**; we will need it later. 
+4. When registration finishes, the Azure portal displays the app registration's **Overview** pane. You see the **Application (client) ID**. Also called the **client ID**, this value uniquely identifies your application in the Microsoft identity platform. Verify that the **Supported account types** is set to "Single organization". Copy the **Application (client) ID**; we will need it later. 
 
 <p> <img src="images/aad_app_overview.png" />
 
-1. On the side rail in the **Manage** section, navigate to the **Certificates & secrets** section. In the Client secrets section, click on **+ New client secret**. Add a description for the secret, and choose when the secret will expire. Click **Add**.
+5. On the side rail in the **Manage** section, navigate to the **Certificates & secrets** section. In the Client secrets section, click on **+ New client secret**. Add a description for the secret, and choose when the secret will expire. Click **Add**.
 
 <p> <img src="images/aad_app_secret.png" />
 
-4. Once the **Client secret** is created, copy its value; At this point you should have values of **Client secret**, **Directory (tenant) ID**, **Application (client) Id**. We will need these values later. 
-5. Under **API Permissions**, select **Add a permission**. Under **Select an API**, select particular service and give following permissions,
+6. Once the **Client secret** is created, copy its value; At this point you should have values of **Client secret**, **Directory (tenant) ID**, **Application (client) Id**. We will need these values later. 
+7. Under **API Permissions**, select **Add a permission**. Under **Select an API**, select particular service and give following permissions,
     * Under **Commonly used Microsoft APIs**, Select “Microsoft Graph”, then select following permissions under **Delegated permissions** section,
         * Chat.Read
         * Chat.ReadBasic
