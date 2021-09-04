@@ -1,17 +1,33 @@
-# Teams-Notification
+# Teams-Notification Overview and Deployment Guide
 
-Sending Notification in Microsoft Teams activity feed brings the users attention by notifying them or sending them reminders about the changes via custom messages or adaptive cards. This allows your apps to provide richer experiences and better engage users by helping to keep them up to date with changes in the apps and workflows they use. 
+**Teams-Notification** solution is for communication with members of one or multiple O365 groups within your company tenant. This solution enables you to broadcast a notification and also bring user attention to a particular notification by sending reminders. This solution enables you to provide richer experience to users and better engage with them by keeping them up to date with your company communication and various changes regarding apps and workflows used by them. 
 
-The solution provides an effortless way to send custom notifications to designated or all users. Use this solution for scenarios like, updates about townhalls, announcements, sending content updates of Microsoft 365 Learning Pathways, such as new trainings on O365, URLs to learn more about Outlook, SharePoint, and Teams.
+Use this solution for scenarios like updates about townhalls, announcements, sending content updates of Microsoft 365 Learning Pathways, such as new trainings, URLs to learn more about Microsoft Outlook, SharePoint and Teams.
 
-## Core Scenario
-Key features
-1.	Message Creation: Easily create custom messages with individual users. Use adaptive cards to send your messages and for more engaging experience with your user.
-2.	Custom Notification: Setup reminders in your organization according to your required frequency, daily, weekly, monthly.
-3.	Target Audience: Send the messages in 1:1 chat to all the users of the organization, send the messages in 1:1 chat to the members of the selected teams.
+## Key Features
 
-##Deployment guide
-1.	Prerequisites
-1.a. An Azure account that has an active subscription. Create an account for free.
-1.b. <<global admin rights>>
+1. Custom Notification: Send company wide communication through 1:1 custom messages/ adaptive cards for a more engaging experience with your users.
+1. Reminder for Notification: Send reminders for earlier notifications at desired frequency i.e. daily, weekly, monthly through Microsoft Teams Activity Feed.
+1. Target Audience: Choose your target audience i.e. members of one or multiple O365 groups/ teams.
 
+## Deployment Guide
+### Prerequisites
+To begin, you will need:
+* Azure subscription
+* Office 365 subscription and admin rights for following -
+    * Exchange Online
+    * Sharepoint Online
+    * Microsoft Teams
+* A copy of Teams-Notification zip package. Link to [Teams-Notification package](https://github.com/swatiarora11/QuizApp/blob/master/Deployment/QuizApp.zip)
+
+### Step 1: Register Azure AD Application
+
+### Step 2: Setup SharePoint Online
+
+### Step 3: Setup Microsoft Teams
+
+### Step 4: Setup Powershell
+
+### Step 5: Test Your First Notification
+
+### Step 6: Test Your First Reminder
