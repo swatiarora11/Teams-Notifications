@@ -46,8 +46,8 @@ Follow these steps to create the app registration:
 
 <p> <img src="images/aad_app_secret.png" />
 
-1. Once the **Client secret** is created, copy its value; At this point you should have values of **Client secret**, **Directory (tenant) ID**, **Application (client) Id**. We will need these values later. 
-1. Under **API Permissions**, select **Add a permission**. Under **Select an API**, select particular service and give following permissions,
+4. Once the **Client secret** is created, copy its value; At this point you should have values of **Client secret**, **Directory (tenant) ID**, **Application (client) Id**. We will need these values later. 
+5. Under **API Permissions**, select **Add a permission**. Under **Select an API**, select particular service and give following permissions,
     * Under **Commonly used Microsoft APIs**, Select “Microsoft Graph”, then select following permissions under **Delegated permissions** section,
         * Chat.Read
         * Chat.ReadBasic
@@ -68,7 +68,7 @@ Follow these steps to create the app registration:
 <p> <img src="images/aad_app_api_perm1.png" />
 <p> <img src="images/aad_app_api_perm2.png" />
 
-If you are logged in as tenant administrator, click on “Grant admin consent for %tenant-name%”, else inform your tenant administrator to do the same.
+If you are logged in as Tenant Administrator, click on “Grant admin consent”, else inform your Tenant Administrator to do the same.
 
 ### Step 2: Setup SharePoint Online
 
