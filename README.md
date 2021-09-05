@@ -65,9 +65,9 @@ Follow these steps to create the app registration:
 If you are logged in as Tenant Administrator, click on “Grant admin consent”, else inform your Tenant Administrator to do the same.
 
 ### Step 2: Configure SharePoint Online
-**Sharepoint Online List:** TODO 
+**Create Notification List:** TODO 
 
-**Sharepoint Online Client SDK:** Download [Sharepoint Online Client SDK](https://www.microsoft.com/en-us/download/details.aspx?id=42038) and install the SDK to your local machine. This SDK is required by Powershell scripts provided with this solution. 
+**Install Sharepoint Online Client SDK:** Download [Sharepoint Online Client SDK](https://www.microsoft.com/en-us/download/details.aspx?id=42038) and install the SDK to your local machine. This SDK is required by Powershell scripts provided with this solution. 
 
 ### Step 3: Create and Install Teams Notification App 
 1. Download [Teams-Notification app package]() zip file from this git repository and extract the same to a local folder.
@@ -96,14 +96,14 @@ If you are logged in as Tenant Administrator, click on “Grant admin consent”
 
 ### Step 4: Install Powershell Modules
 Run Windows Powershell as administrator and install following Powershell modules to configure Powershell for this solution.
-**Exchange Online Module:** Copy and Paste the following command to install this package using PowerShellGet [More Info](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
+**Exchange Online Module:** Copy and Paste the following command to install this package using PowerShellGet. [Know More](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
 
 ```
 Install-Module -Name ExchangeOnlineManagement
 ```
 To know more about Exchange Online Powershell Module, click [here](https://docs.microsoft.com/en-us/powershell/exchange/exchange-online-powershell-v2?view=exchange-ps)
 
-**Microsoft Teams Module:** Copy and Paste the following command to install this package using PowerShellGet [More Info](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
+**Microsoft Teams Module:** Copy and Paste the following command to install this package using PowerShellGet. [Know More](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
 
 ```
 Install-Module -Name MicrosoftTeams
@@ -122,6 +122,8 @@ To know more about installation of Microsoft Teams Powershell Module, click [her
 6. Press "Y" to proceed. You will see similar output as given below.
 <p> <img src="images/ps_notification_send.png"/>
 
+7. Member of the O365 group would have received the sent notification in Microsoft Teams chat.
+
 ### Step 6: Test Your First Reminder
 
 1. Select "Send Reminder" in **Action** column corresponding to notification entry in the Sharepoint Online list created in Step 2.
@@ -133,3 +135,5 @@ To know more about installation of Microsoft Teams Powershell Module, click [her
 
 6. Press "Y" to proceed. You will see similar output as given below.
 <p> <img src="images/ps_reminder_send.png"/>
+
+7. Member of the O365 group would have received the sent reminder in Microsoft Teams activity feed.
