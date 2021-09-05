@@ -65,7 +65,23 @@ Follow these steps to create the app registration:
 If you are logged in as Tenant Administrator, click on “Grant admin consent”, else inform your Tenant Administrator to do the same.
 
 ### Step 2: Configure SharePoint Online
-**Create Notification List:** TODO 
+From Sharepoint Online, create a Team Site named as TeamNotification.
+
+**Create Sharepoint List**
+1. Open Site Contents on the TeamNotification Site and select New >> List.
+Select Blank List.Enter the name of the List as Notification.
+
+2. Add the following coloumns in the list and select the type as shown below
+<p> <img src="images/sp_columnt_ypes.png"/>
+
+**Note**: Do not create columns with name ID,Title,Created by and Modified by as they exist by default in the list.
+
+ **Create Document Library**  
+1. Open Site Contents on the  TeamNotification Site and select New >> Document.
+Enter the name of the Document as TeamsNotification.
+
+**Note**: Please ensure to use the same name as given the documentation for Sharepoint List  and Document Library.
+
 
 **Install Sharepoint Online Client SDK:** Download [Sharepoint Online Client SDK](https://www.microsoft.com/en-us/download/details.aspx?id=42038) and install the SDK to your local machine. This SDK is required by Powershell scripts provided with this solution. 
 
