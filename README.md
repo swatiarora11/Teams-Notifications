@@ -75,10 +75,13 @@ Select Blank List.Enter the name of the List as Notification.
 <p> <img src="images/sp_columnt_ypes.png"/>
 
 **Note**: Do not create columns with name ID,Title,Created by and Modified by as they exist by default in the list.
+<p> <img src="images/sp_list_column.png"/>
 
  **Create Document Library**  
 1. Open Site Contents on the  TeamNotification Site and select New >> Document.
 Enter the name of the Document as TeamsNotification.
+
+
 
 **Note**: Please ensure to use the same name as given the documentation for Sharepoint List  and Document Library.
 
