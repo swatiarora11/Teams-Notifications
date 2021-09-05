@@ -113,10 +113,10 @@ To know more about installation of Microsoft Teams Powershell Module, click [her
 ### Step 5: Test Your First Notification
 
 1. Select "Send Notification" in **Action** column corresponding to notification entry in the Sharepoint Online list created in Step 2.
-2. Launch Powershell in Administrator mode. Skip this step if already launched.
+2. Launch **Powershell in Administrator mode**. Skip this step if already launched.
 3. Download [Notification.ps1]() and [NotificationUtil.psm1]() from this git repository into a local folder. 
-4. Run NotificationUtil.psm1 script first to load utility library functions.
-5. Launch Notification.ps1 powershell script. If you have done all above steps correctly, you will see following output.
+4. Run [NotificationUtil.psm1]() script first to load utility library functions.
+5. Launch [Notification.ps1]() powershell script. If you have done all above steps correctly, you will see following output.
 <p> <img src="images/ps_notification_launch.png"/>
 
 6. Press "Y" to proceed. You will see similar output as given below.
@@ -125,10 +125,10 @@ To know more about installation of Microsoft Teams Powershell Module, click [her
 ### Step 6: Test Your First Reminder
 
 1. Select "Send Reminder" in **Action** column corresponding to notification entry in the Sharepoint Online list created in Step 2.
-2. Launch Powershell in Administrator mode. Skip this step if already launched. 
+2. Launch **Powershell in Administrator mode**. Skip this step if already launched. 
 3. Download [Notification.ps1]() and [NotificationUtil.psm1]() from this git repository into a local folder. Skip this step if already downloaded. 
-4. Run NotificationUtil.psm1 script first to load utility library functions. Skip this step if already done. 
-5. Launch Notification.ps1 powershell script. If you have done all above steps correctly, you will see following output.
+4. Run [NotificationUtil.psm1]() script first to load utility library functions. Skip this step if already done. 
+5. Launch [Notification.ps1]() powershell script. If you have done all above steps correctly, you will see following output.
 <p> <img src="images/ps_notification_launch.png"/>
 
 6. Press "Y" to proceed. You will see similar output as given below.
