@@ -57,10 +57,10 @@ Follow these steps to create the app registration:
         * TeamsAcitvity.Send
         * User.Read.All
         * User.ReadWrite.All
-    * Click on **Add Permissions** to save your changes.
+    Click on **Add Permissions** to save your changes.
 
-<p> <img src="images/aad_app_api_perm1.png" />
-<p> <img src="images/aad_app_api_perm2.png" />
+<p> <img src="images/aad_app_api_perm1.png" align="center"/>
+<p> <img src="images/aad_app_api_perm2.png" align="center"/>
 
 If you are logged in as Tenant Administrator, click on “Grant admin consent”, else inform your Tenant Administrator to do the same.
 
@@ -74,14 +74,14 @@ If you are logged in as Tenant Administrator, click on “Grant admin consent”
 
 ### Step 4: Install Powershell Modules
 Run Windows Powershell ISE as administrator and install following Powershell modules to configure Powershell for this solution.
-1. **Exchange Online Module:** Copy and Paste the following command to install this package using PowerShellGet [More Info](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
+**Exchange Online Module:** Copy and Paste the following command to install this package using PowerShellGet [More Info](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
 
 ```
 Install-Module -Name ExchangeOnlineManagement
 ```
 To know more about Exchange Online Powershell Module, click [here](https://docs.microsoft.com/en-us/powershell/exchange/exchange-online-powershell-v2?view=exchange-ps)
 
-2. **Microsoft Teams Module:** Copy and Paste the following command to install this package using PowerShellGet [More Info](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
+**Microsoft Teams Module:** Copy and Paste the following command to install this package using PowerShellGet [More Info](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
 
 ```
 Install-Module -Name MicrosoftTeams
