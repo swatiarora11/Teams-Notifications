@@ -26,13 +26,13 @@ Follow these steps to create the app registration:
 1. Sign in to the [Azure portal.](https://portal.azure.com/)
 2. Search for and select Azure Active Directory.
 3. Under **Manage**, select **App registrations** > **New registration**.
-    * Enter a display **Name** for your application for e.g. **TeamsNotifications**. 
+    * Enter a display **Name** for your application for e.g. **SendTeamsNotification**. 
     * Specify who can use the application. Select "Accounts in this organizational directory only" option for **Supported account types**.
     * Don't enter anything for **Redirect URI (optional)**.
     * Select **Register** to complete the initial app registration.
 <p> <img src="images/aad_app_register.png" />
 
-4. When registration finishes, the Azure portal displays the app registration's **Overview** pane. You see the **Application (client) ID**. Also called the **client ID**, this value uniquely identifies your application in the Microsoft identity platform. Verify that the **Supported account types** is set to "Single organization". Copy the **Application (client) ID**; we will need it later. 
+4. When registration finishes, the Azure portal displays the app registration's **Overview** pane. You see the **Application (client) ID**. Also called the **client ID**, this value uniquely identifies your application in the Microsoft identity platform. Verify that the **Supported account types** is set to "My organization only". Copy the **Application (client) ID**; we will need it later. 
 
 <p> <img src="images/aad_app_overview.png" />
 
