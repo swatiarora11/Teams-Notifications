@@ -17,7 +17,7 @@ To begin, you will need:
 * The Azure account must have permission to manage applications in Azure Active Directory (Azure AD). Any of the Azure AD roles (Application administrator/ Application developer/ Cloud application administrator) include the required permissions.
 * An Office 365 account that has an active subscription of Exchange Online, Sharepoint Online and Microsoft Teams
 * Office 365 account(s) with administrative rights for Exchange Online, Sharepoint Online and Microsoft Teams workloads.
-* Teams-Notification zip package. Link to [Teams-Notification package](https://github.com/swatiarora11/QuizApp/blob/master/Deployment/QuizApp.zip)
+* Teams-Notification ZIP package. Link to [Teams-Notification package](https://github.com/swatiarora11/QuizApp/blob/master/Deployment/QuizApp.zip)
 
 ### Step 1: Register Azure AD Application
 Registering your application establishes a trust relationship between your app and the Microsoft identity platform. The trust is unidirectional: your app trusts the Microsoft identity platform, and not the other way around.
@@ -59,18 +59,40 @@ Follow these steps to create the app registration:
         * User.ReadWrite.All
     Click on **Add Permissions** to save your changes.
 
-<p> <img src="images/aad_app_api_perm1.png" align="center"/>
-<p> <img src="images/aad_app_api_perm2.png" align="center"/>
+<p> <img src="images/aad_app_api_perm1.png"/>
+<p> <img src="images/aad_app_api_perm2.png"/>
 
 If you are logged in as Tenant Administrator, click on “Grant admin consent”, else inform your Tenant Administrator to do the same.
 
 ### Step 2: Configure SharePoint Online
-1. **Sharepoint Online Client SDK:** Download [Sharepoint Online Client SDK](https://www.microsoft.com/en-us/download/details.aspx?id=42038) and install the SDK to your local machine. This SDK is required by Powershell scripts provided with this solution. 
+**Sharepoint Online List:** TODO 
+
+**Sharepoint Online Client SDK:** Download [Sharepoint Online Client SDK](https://www.microsoft.com/en-us/download/details.aspx?id=42038) and install the SDK to your local machine. This SDK is required by Powershell scripts provided with this solution. 
 
 ### Step 3: Create and Install Teams Notification App 
 1. Download [Teams-Notification app package]() zip file from this git repository and extract the same to a local folder.
-2. 
+2. Change following fields in the manifest.json ([What's this](https://docs.microsoft.com/en-us/microsoftteams/platform/resources/schema/manifest-schema#developer)) to values appropriate for your organization.
+* developer.name (What's this?)
+* developer.websiteUrl
+* developer.privacyUrl
+* developer.termsOfUseUrl
+3. Change the **id**  field  under **webApplicationInfo** section in the manifest to **Application (client) Id** value from Step 1 and save manifest.json file.
+4. Create a ZIP package with manifest.json and app icon files (color.png and outline.png). Make sure that there are no nested folders within this ZIP package.
+<p> <img src="images/teams_app_zip.png"/>
 
+5. Navigate to Microsoft Teams Admin Center. Under **Teams apps** > **Manage apps** section, click **+ Upload** and upload ZIP package file created in the previous step. Once upload is complete, you will be able to see the **Teams-Notification** app under the **Manage apps** tab as shown below.
+<p> <img src="images/teams_app_upload.png"/>
+
+6. Ensure that Custom App policy permission has been enabled under Permission Policies.
+<p> <img src="images/teams_app_allow_custom_apps.png"/>
+
+7. Now add this app to **App Setup Policies**, which in turn will make the app visible to all users in Microsoft Teams canvas. To add this for all users, select Global Policy. 
+<p> <img src="images/teams_app_setup_policy.png"/>
+
+8. Now set the sequence to make the app visible to each user. We recommend to pin the app in the top 5, so that it is easily visible to end users on each client. Hit **Save** to make this change.
+<p> <img src="images/teams_app_pinned_sequence.png"/>
+
+9. That’s it! You will now see the Teams-Notification App pinned on every user’s Teams App experience and you can run the app successfully.
 
 ### Step 4: Install Powershell Modules
 Run Windows Powershell ISE as administrator and install following Powershell modules to configure Powershell for this solution.
