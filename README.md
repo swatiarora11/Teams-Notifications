@@ -72,10 +72,10 @@ If you are logged in as Tenant Administrator, click on “Grant admin consent”
 ### Step 3: Create and Install Teams Notification App 
 1. Download [Teams-Notification app package]() zip file from this git repository and extract the same to a local folder.
 2. Change following fields in the manifest.json ([What's this](https://docs.microsoft.com/en-us/microsoftteams/platform/resources/schema/manifest-schema#developer)) to values appropriate for your organization.
-* developer.name (What's this?)
-* developer.websiteUrl
-* developer.privacyUrl
-* developer.termsOfUseUrl
+    * developer.name (What's this?)
+    * developer.websiteUrl
+    * developer.privacyUrl
+    * developer.termsOfUseUrl
 3. Change the **id**  field  under **webApplicationInfo** section in the manifest to **Application (client) Id** value from Step 1 and save manifest.json file.
 4. Create a ZIP package with manifest.json and app icon files (color.png and outline.png). Make sure that there are no nested folders within this ZIP package.
 <p> <img src="images/teams_app_zip.png"/>
@@ -95,7 +95,7 @@ If you are logged in as Tenant Administrator, click on “Grant admin consent”
 9. That’s it! You will now see the Teams-Notification App pinned on every user’s Teams App experience and you can run the app successfully.
 
 ### Step 4: Install Powershell Modules
-Run Windows Powershell ISE as administrator and install following Powershell modules to configure Powershell for this solution.
+Run Windows Powershell as administrator and install following Powershell modules to configure Powershell for this solution.
 **Exchange Online Module:** Copy and Paste the following command to install this package using PowerShellGet [More Info](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
 
 ```
@@ -112,4 +112,24 @@ To know more about installation of Microsoft Teams Powershell Module, click [her
 
 ### Step 5: Test Your First Notification
 
+1. Select "Send Notification" in **Action** column corresponding to notification entry in the Sharepoint Online list created in Step 2.
+2. Launch Powershell in Administrator mode. Skip this step if already launched.
+3. Download [Notification.ps1]() and [NotificationUtil.psm1]() from this git repository into a local folder. 
+4. Run NotificationUtil.psm1 script first to load utility library functions.
+5. Launch Notification.ps1 powershell script. If you have done all above steps correctly, you will see following output.
+<p> <img src="images/ps_notification_launch.png"/>
+
+6. Press "Y" to proceed. You will see similar output as given below.
+<p> <img src="images/ps_notification_send.png"/>
+
 ### Step 6: Test Your First Reminder
+
+1. Select "Send Reminder" in **Action** column corresponding to notification entry in the Sharepoint Online list created in Step 2.
+2. Launch Powershell in Administrator mode. Skip this step if already launched. 
+3. Download [Notification.ps1]() and [NotificationUtil.psm1]() from this git repository into a local folder. Skip this step if already downloaded. 
+4. Run NotificationUtil.psm1 script first to load utility library functions. Skip this step if already done. 
+5. Launch Notification.ps1 powershell script. If you have done all above steps correctly, you will see following output.
+<p> <img src="images/ps_notification_launch.png"/>
+
+6. Press "Y" to proceed. You will see similar output as given below.
+<p> <img src="images/ps_reminder_send.png"/>
