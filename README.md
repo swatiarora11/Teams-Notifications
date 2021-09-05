@@ -7,22 +7,16 @@ Use this solution for scenarios like updates about townhalls, announcements, sen
 ## Key Features
 
 1. **Custom Notification:** Send company wide communication through 1:1 custom messages/ adaptive cards for a more engaging experience with your users.
-1. **Reminder for Notification:** Send reminders for earlier notifications at desired frequency i.e. daily, weekly, monthly through Microsoft Teams Activity Feed.
+1. **Reminders for Notification:** Send reminders for earlier notifications at desired frequency i.e. daily, weekly, monthly through Microsoft Teams Activity Feed.
 1. **Target Audience:** Choose your target audience i.e. members of one or multiple O365 groups/ teams.
 
 ## Deployment Guide
 ### Prerequisites 
 To begin, you will need:
 * An Azure account that has an active subscription. [Create an account for free.](https://azure.microsoft.com/free/?WT.mc_id=A261C142F)
-* The Azure account must have permission to manage applications in Azure Active Directory (Azure AD). Any of the following Azure AD roles include the required permissions:
-    * Application administrator
-    * Application developer
-    * Cloud application administrator
+* The Azure account must have permission to manage applications in Azure Active Directory (Azure AD). Any of the Azure AD roles (Application administrator/ Application developer/ Cloud application administrator) include the required permissions.
 * An Office 365 account that has an active subscription of Exchange Online, Sharepoint Online and Microsoft Teams
-* Office 365 account(s) with administrative rights for the following workloads -
-    * Exchange Online
-    * Sharepoint Online
-    * Microsoft Teams
+* Office 365 account(s) with administrative rights for Exchange Online, Sharepoint Online and Microsoft Teams workloads.
 * Teams-Notification zip package. Link to [Teams-Notification package](https://github.com/swatiarora11/QuizApp/blob/master/Deployment/QuizApp.zip)
 
 ### Step 1: Register Azure AD Application
@@ -47,8 +41,8 @@ Follow these steps to create the app registration:
 <p> <img src="images/aad_app_secret.png" />
 
 6. Once the **Client secret** is created, copy its value; At this point you should have values of **Client secret**, **Directory (tenant) ID**, **Application (client) Id**. We will need these values later. 
-7. Under **API Permissions** > **Add a permission** > **Select an API** >  **Commonly used Microsoft APIs**, select “Microsoft Graph” and give following permissions,
-    * Under **Delegated permissions**,
+7. Navigate to **API Permissions** > **Add a permission** > **Select an API** >  **Commonly used Microsoft APIs** and select “Microsoft Graph”.
+    * Under **Delegated permissions**, Assign following permissions
         * Chat.Read
         * Chat.ReadBasic
         * Chat.ReadWrite
@@ -56,7 +50,7 @@ Follow these steps to create the app registration:
         * TeamsActivity.Send
         * User.Read
         * UserActivity.ReadWrite.Created
-    * Under **Application Permissions**,
+    * Under **Application Permissions**, Assign following permissions
         * Directory.Read.All
         * Directory.ReadWrite.All
         * TeamsActivity.Read.All
@@ -70,11 +64,29 @@ Follow these steps to create the app registration:
 
 If you are logged in as Tenant Administrator, click on “Grant admin consent”, else inform your Tenant Administrator to do the same.
 
-### Step 2: Setup SharePoint Online
+### Step 2: Configure SharePoint Online
+1. **Sharepoint Online Client SDK:** Download [Sharepoint Online Client SDK](https://www.microsoft.com/en-us/download/details.aspx?id=42038) and install the SDK to your local machine. This SDK is required by Powershell scripts provided with this solution. 
 
-### Step 3: Setup Microsoft Teams
+### Step 3: Create and Install Teams Notification App 
+1. Download [Teams-Notification app package]() zip file from this git repository and extract the same to a local folder.
+2. 
 
-### Step 4: Setup Powershell
+
+### Step 4: Install Powershell Modules
+Run Windows Powershell ISE as administrator and install following Powershell modules to configure Powershell for this solution.
+1. **Exchange Online Module:** Copy and Paste the following command to install this package using PowerShellGet [More Info](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
+
+```
+Install-Module -Name ExchangeOnlineManagement
+```
+To know more about Exchange Online Powershell Module, click [here](https://docs.microsoft.com/en-us/powershell/exchange/exchange-online-powershell-v2?view=exchange-ps)
+
+2. **Microsoft Teams Module:** Copy and Paste the following command to install this package using PowerShellGet [More Info](https://docs.microsoft.com/en-us/powershell/module/powershellget/install-module?view=powershell-7.1)
+
+```
+Install-Module -Name MicrosoftTeams
+```
+To know more about installation of Microsoft Teams Powershell Module, click [here](https://docs.microsoft.com/en-us/microsoftteams/teams-powershell-install)
 
 ### Step 5: Test Your First Notification
 
