@@ -35,7 +35,7 @@ function Get-Sessions {
 
     try {
         Connect-ExOnline -UserName $ExoUserName
-        Connect-MicrosoftTeams -AccountId $TeamsUserName
+        Connect-MicrosoftTeams #-AccountId $TeamsUserName
     
     } catch {
         write-host "Error: $($_.Exception.Message)" -Foregroundcolor Red

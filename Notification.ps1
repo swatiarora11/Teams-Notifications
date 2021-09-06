@@ -201,9 +201,6 @@ $SpoContext = Get-SpoContext -SpoSiteUrl $Configuration.'spo.site.url' `
                     -SpoUserName $Configuration.'spo.user.name' `
                     -SpoPassword $Configuration.'spo.user.password'
 
-#Get Configuration from Sharepoint Online
-#$RemoteConfiguration = Get-SpoFileContent -SpoContext $SpoContext -SourceFileURL "$($SpoContext.Url)/TeamsNotification/app2.properties"
-
 #Get Exchange Online and Teams Sessions
 Get-Sessions -ExoUserName $Configuration.'exo.user.name' -TeamsUserName $Configuration.'teams.user.name'
 
