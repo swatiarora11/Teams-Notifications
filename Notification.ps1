@@ -41,6 +41,51 @@ function Get-UserChoice {
     return $Choice
 }
 
+# Function to Send One2One Teams Chat Card
+function Send-ChatCard {
+    param (
+        $ChatID,
+        $Notification,
+        $Header
+    )
+
+    # Chat url
+    $URL = "https://graph.microsoft.com/beta/chats/$($ChatID)/messages"
+
+    $AttachmentId = "374d20c7f34aa4a7fb74e2b30004247c5"
+
+    # Create body
+    $Body = "
+    {
+      'body': {
+        'contentType': 'html',
+         'content': '<attachment id=""(($AttachmentId))""></attachment>'
+      },
+      'attachments': [
+         {
+             'id': '(($AttachmentId))',
+             'contentType': 'application/vnd.microsoft.card.thumbnail',
+             'contentUrl': null,
+             'content': '{\r\n ""title"": ""Seattle Center Monorail"",\r\n  ""subtitle"": ""<h3>Seattle Center Monorail</h3>"",\r\n  ""text"": ""The Seattle Center Monorail is an elevated train line between Seattle Center (near the Space Needle) and downtown Seattle. It was built for the 1962 World's Fair. Its original two trains, completed in 1961, are still in service.<br><br>Seattle Center Monorail departs approximately every 10 minutes from two stations:<br><ul><li>Westlake Center Station, at 5th Avenue and Pine Street<li>Seattle Center Station, adjacent to the Space Needle</ul>"",\r\n  ""buttons"": [\r\n    {\r\n      ""type"": ""openUrl"",\r\n      ""title"": ""Know More"",\r\n      ""displayText"": ""Know More"",\r\n      ""value"": ""https://www.seattlemonorail.com""\r\n    }\r\n  ]\r\n}',
+             'name': null,
+             'thumbnailUrl': null
+         }
+      ]
+    }"
+
+    try {
+        # Invoke REST api to post chat
+        $Response = Invoke-RestMethod -Uri $URL -Headers $Header -Body $Body -Method Post -ContentType "application/json"
+    } catch {       
+        $Response = @{
+            StatusCode = $_.Exception.Response.StatusCode.value__;
+            StatusDescription = $_.Exception.Response.StatusDescription
+        }
+    }
+
+    return $Response
+}
+
 #Function to Send Notification to Group Memebers
 function Send-NotificationToGroupMembers {
    param (
@@ -87,12 +132,23 @@ function Send-NotificationToGroupMembers {
   
             if ($NewOne2OneChatResponse.id)
             {
-                #Send teams chat
-                $SendChatResponse = Send-Chat -Header $Header -ChatID $NewOne2OneChatResponse.id -Text $Notification
+                if($Notification.Action.Equals("Send Chat Notification")) {
+                    #Send notification in teams chat
+                    $SendChatResponse = Send-Chat -Header $Header -ChatID $NewOne2OneChatResponse.id -Text $Notification.Notification
                
-                if($SendChatResponse['StatusCode']) {
-                    Publish-Error -SC $SendChatResponse['StatusCode'] -Member $Member -Message "Unable to send one2one chat to user" -Log $FLog
-                    continue 
+                    if($SendChatResponse['StatusCode']) {
+                        Publish-Error -SC $SendChatResponse['StatusCode'] -Member $Member -Message "Unable to send one2one chat notification to user" -Log $FLog
+                        continue 
+                    }
+                }
+                elseif($Notification.Action.Equals("Send Chat Card")) {
+                    #Send card in teams chat
+                    $SendCardResponse = Send-ChatCard -Header $Header -ChatID $NewOne2OneChatResponse.id -Notification $Notification
+               
+                    if($SendCardResponse['StatusCode']) {
+                        Publish-Error -SC $SendCardResponse['StatusCode'] -Member $Member -Message "Unable to send one2one chat card to user" -Log $FLog
+                        continue 
+                    }
                 }
             }
 
@@ -130,7 +186,7 @@ function Send-Reminder {
         $Notifier,
         $Config,
         $LogID,
-        $PreviewText
+        $Notification
     )
 
     $CurrentFolder = Get-Location
@@ -169,7 +225,7 @@ function Send-Reminder {
         {
             #Send teams chat activity feed
             $SendChatActivityResponse = Send-ChatActivityFeed -Header $Header -Recepient $User -ChatID $Notification.ChatId `
-            -Messageid $Notification.MsgId -Preview $PreviewText -Activity "approvalRequired" `
+            -Messageid $Notification.MsgId -Preview $Notification.PreviewText -Activity "approvalRequired" `
             -Params "{'name': 'deploymentId', 'value': '12345'}"
 
             if($SendChatActivityResponse['StatusCode']) { 
@@ -229,21 +285,30 @@ if($Choice -eq 'Proceed') {
             Send = ($item.FieldValues.Send)
             Remind = ($item.FieldValues.Remind)
             PreviewText = ($item.FieldValues.PreviewText)
+            Action = ($item.FieldValues.Action)
         }
 
-        if($Notification.Send) {
+        if($Notification.Action.Equals("Send Chat Notification")) {
 
-            Write-Host "Executing Script to Send Notification Title $($Notification.Title)" -ForegroundColor Yellow
+            Write-Host "Executing Script to Send Chat Notification Title $($Notification.Title)" -ForegroundColor Yellow
 
             Send-NotificationToGroupMembers -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
-            -GroupIds $Notification.ExoGroupIds -Notifier $Configuration.'teams.user.id' -Notification $Notification.Notification
+            -GroupIds $Notification.ExoGroupIds -Notifier $Configuration.'teams.user.id' -Notification $Notification
+        }
+        elseif($Notification.Action.Equals("Send Chat Card")) {
+            
+            Write-Host "Executing Script to Send Chat Card Title $($Notification.Title)" -ForegroundColor Yellow
+
+            Send-NotificationToGroupMembers -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
+            -GroupIds $Notification.ExoGroupIds -Notifier $Configuration.'teams.user.id' -Notification $Notification
+
         } 
-        elseif($Notification.Remind) {
+        elseif($Notification.Action.Equals("Send Reminder")) {
     
-            Write-Host "Executing Script to Send Reminder for Notification Title $($Notification.Title)" -ForegroundColor Yellow
+            Write-Host "Executing Script to Send Reminder for Chat Notification Title $($Notification.Title)" -ForegroundColor Yellow
 
             Send-Reminder -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
-            -Notifier $Configuration.'teams.user.id' -PreviewText $Notification.PreviewText
+            -Notifier $Configuration.'teams.user.id' -Notification $Notification
         }
     }
 }
