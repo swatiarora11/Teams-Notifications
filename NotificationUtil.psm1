@@ -229,6 +229,56 @@ function Send-Chat {
     return $Response
 }
 
+# Function to Send One2One Teams Chat Card
+function Send-ChatCard {
+    param (
+        $ChatID,
+        $Notification,
+        $Header
+    )
+
+    # Chat url
+    $URL = "https://graph.microsoft.com/beta/chats/$($ChatID)/messages"
+
+    $AttachmentId = "374d20c7f34aa4a7fb74e2b30004247c5"
+    $Title = $Notification.CardTitle
+    $SubTitle = $Notification.CardSubTitle
+    $Text = $Notification.Notification
+    $ButtonLabel = $Notification.CardButtonLabel
+    $ButtonLink = $Notification.CardButtonLink
+
+    # Create body
+    $Body = "
+    {
+      'body': {
+        'contentType': 'html',
+         'content': '<attachment id=""(($AttachmentId))""></attachment>'
+      },
+      'attachments': [
+         {
+             'id': '(($AttachmentId))',
+             'contentType': 'application/vnd.microsoft.card.thumbnail',
+             'contentUrl': null,
+             'content': '{""title"": ""$Title"",""subtitle"": ""$SubTitle"", ""text"": ""$Text"", ""buttons"": [{""type"": ""openUrl"", ""title"": ""$ButtonLabel"", ""value"": ""$ButtonLink""}]}',
+             'name': null,
+             'thumbnailUrl': null
+         }
+      ]
+    }"
+
+    try {
+        # Invoke REST api to post chat
+        $Response = Invoke-RestMethod -Uri $URL -Headers $Header -Body $Body -Method Post -ContentType "application/json"
+    } catch {       
+        $Response = @{
+            StatusCode = $_.Exception.Response.StatusCode.value__;
+            StatusDescription = $_.Exception.Response.StatusDescription
+        }
+    }
+
+    return $Response
+}
+
 # Function to Send Reminder
 function Send-ChatActivityFeed {
     param (

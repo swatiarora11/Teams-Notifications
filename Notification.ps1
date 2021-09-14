@@ -41,51 +41,6 @@ function Get-UserChoice {
     return $Choice
 }
 
-# Function to Send One2One Teams Chat Card
-function Send-ChatCard {
-    param (
-        $ChatID,
-        $Notification,
-        $Header
-    )
-
-    # Chat url
-    $URL = "https://graph.microsoft.com/beta/chats/$($ChatID)/messages"
-
-    $AttachmentId = "374d20c7f34aa4a7fb74e2b30004247c5"
-
-    # Create body
-    $Body = "
-    {
-      'body': {
-        'contentType': 'html',
-         'content': '<attachment id=""(($AttachmentId))""></attachment>'
-      },
-      'attachments': [
-         {
-             'id': '(($AttachmentId))',
-             'contentType': 'application/vnd.microsoft.card.thumbnail',
-             'contentUrl': null,
-             'content': '{\r\n ""title"": ""Seattle Center Monorail"",\r\n  ""subtitle"": ""<h3>Seattle Center Monorail</h3>"",\r\n  ""text"": ""The Seattle Center Monorail is an elevated train line between Seattle Center (near the Space Needle) and downtown Seattle. It was built for the 1962 World's Fair. Its original two trains, completed in 1961, are still in service.<br><br>Seattle Center Monorail departs approximately every 10 minutes from two stations:<br><ul><li>Westlake Center Station, at 5th Avenue and Pine Street<li>Seattle Center Station, adjacent to the Space Needle</ul>"",\r\n  ""buttons"": [\r\n    {\r\n      ""type"": ""openUrl"",\r\n      ""title"": ""Know More"",\r\n      ""displayText"": ""Know More"",\r\n      ""value"": ""https://www.seattlemonorail.com""\r\n    }\r\n  ]\r\n}',
-             'name': null,
-             'thumbnailUrl': null
-         }
-      ]
-    }"
-
-    try {
-        # Invoke REST api to post chat
-        $Response = Invoke-RestMethod -Uri $URL -Headers $Header -Body $Body -Method Post -ContentType "application/json"
-    } catch {       
-        $Response = @{
-            StatusCode = $_.Exception.Response.StatusCode.value__;
-            StatusDescription = $_.Exception.Response.StatusDescription
-        }
-    }
-
-    return $Response
-}
-
 #Function to Send Notification to Group Memebers
 function Send-NotificationToGroupMembers {
    param (
@@ -132,7 +87,7 @@ function Send-NotificationToGroupMembers {
   
             if ($NewOne2OneChatResponse.id)
             {
-                if($Notification.Action.Equals("Send Chat Notification")) {
+                if($Notification.Action.Equals("Send Chat")) {
                     #Send notification in teams chat
                     $SendChatResponse = Send-Chat -Header $Header -ChatID $NewOne2OneChatResponse.id -Text $Notification.Notification
                
@@ -141,7 +96,7 @@ function Send-NotificationToGroupMembers {
                         continue 
                     }
                 }
-                elseif($Notification.Action.Equals("Send Chat Card")) {
+                elseif($Notification.Action.Equals("Send Card")) {
                     #Send card in teams chat
                     $SendCardResponse = Send-ChatCard -Header $Header -ChatID $NewOne2OneChatResponse.id -Notification $Notification
                
@@ -286,18 +241,23 @@ if($Choice -eq 'Proceed') {
             Remind = ($item.FieldValues.Remind)
             PreviewText = ($item.FieldValues.PreviewText)
             Action = ($item.FieldValues.Action)
+            CardTitle = ($item.FieldValues.CardTitle)
+            CardSubTitle = ($item.FieldValues.CardSubTitle)
+            CardButtonLabel = ($item.FieldValues.CardButtonLabel)
+            CardButtonLink = ($item.FieldValues.CardButtonLink.Url)
+            CardPictureLink = ($item.FieldValues.CardPicture.Url)
         }
 
-        if($Notification.Action.Equals("Send Chat Notification")) {
+        if($Notification.Action.Equals("Send Chat")) {
 
-            Write-Host "Executing Script to Send Chat Notification Title $($Notification.Title)" -ForegroundColor Yellow
+            Write-Host "Executing Script to Send Chat Title $($Notification.Title)" -ForegroundColor Yellow
 
             Send-NotificationToGroupMembers -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
             -GroupIds $Notification.ExoGroupIds -Notifier $Configuration.'teams.user.id' -Notification $Notification
         }
-        elseif($Notification.Action.Equals("Send Chat Card")) {
+        elseif($Notification.Action.Equals("Send Card")) {
             
-            Write-Host "Executing Script to Send Chat Card Title $($Notification.Title)" -ForegroundColor Yellow
+            Write-Host "Executing Script to Send Card Title $($Notification.Title)" -ForegroundColor Yellow
 
             Send-NotificationToGroupMembers -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
             -GroupIds $Notification.ExoGroupIds -Notifier $Configuration.'teams.user.id' -Notification $Notification
@@ -305,7 +265,7 @@ if($Choice -eq 'Proceed') {
         } 
         elseif($Notification.Action.Equals("Send Reminder")) {
     
-            Write-Host "Executing Script to Send Reminder for Chat Notification Title $($Notification.Title)" -ForegroundColor Yellow
+            Write-Host "Executing Script to Send Reminder for Chat Title $($Notification.Title)" -ForegroundColor Yellow
 
             Send-Reminder -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
             -Notifier $Configuration.'teams.user.id' -Notification $Notification
