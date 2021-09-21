@@ -243,9 +243,10 @@ function Send-ChatCard {
     $AttachmentId = "374d20c7f34aa4a7fb74e2b30004247c5"
     $Title = $Notification.CardTitle
     $SubTitle = $Notification.CardSubTitle
-    $Text = $Notification.Notification
     $ButtonLabel = $Notification.CardButtonLabel
     $ButtonLink = $Notification.CardButtonLink
+    $Text = $Notification.Notification
+    $ImageUrl = $Notification.CardPictureLink
 
     # Create body
     $Body = "
@@ -259,7 +260,7 @@ function Send-ChatCard {
              'id': '(($AttachmentId))',
              'contentType': 'application/vnd.microsoft.card.thumbnail',
              'contentUrl': null,
-             'content': '{""title"": ""$Title"",""subtitle"": ""$SubTitle"", ""text"": ""$Text"", ""buttons"": [{""type"": ""openUrl"", ""title"": ""$ButtonLabel"", ""value"": ""$ButtonLink""}]}',
+             'content': '{""title"": ""$Title"",""subtitle"": ""$SubTitle"",""images"": [{""url"":""$ImageUrl""}], ""text"": ""$Text"", ""buttons"": [{""type"": ""openUrl"", ""title"": ""$ButtonLabel"", ""value"": ""$ButtonLink""}]}',
              'name': null,
              'thumbnailUrl': null
          }

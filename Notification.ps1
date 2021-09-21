@@ -229,6 +229,7 @@ if($Choice -eq 'Proceed') {
     
     Write-Host "Proceeding..." -ForegroundColor Yellow
     $NotificationList = Get-SpoListItems -SpoContext $SpoContext -ListTitle "Notification"
+    $DidWork = $false
 
     foreach($item in $NotificationList)
     {
@@ -254,6 +255,8 @@ if($Choice -eq 'Proceed') {
 
             Send-NotificationToGroupMembers -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
             -GroupIds $Notification.ExoGroupIds -Notifier $Configuration.'teams.user.id' -Notification $Notification
+
+            $DidWork = $true
         }
         elseif($Notification.Action.Equals("Send Card")) {
             
@@ -262,14 +265,23 @@ if($Choice -eq 'Proceed') {
             Send-NotificationToGroupMembers -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
             -GroupIds $Notification.ExoGroupIds -Notifier $Configuration.'teams.user.id' -Notification $Notification
 
-        } 
+            $DidWork = $true
+
+        }
+
         elseif($Notification.Action.Equals("Send Reminder")) {
     
             Write-Host "Executing Script to Send Reminder for Chat Title $($Notification.Title)" -ForegroundColor Yellow
 
             Send-Reminder -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
             -Notifier $Configuration.'teams.user.id' -Notification $Notification
+
+            $DidWork = $true
         }
+    }
+
+    if($DidWork -eq $false) {
+        Write-Host "Nothing to do. Quitting..." -ForegroundColor Yellow
     }
 }
 elseif($Choice -eq 'Quit') {
