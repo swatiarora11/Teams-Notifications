@@ -224,6 +224,13 @@ if($Header -eq $null) {
     return
 }
 
+$SignedInUser = Get-SignedInUser -Header $Header
+if($SignedInUser -eq $null) {
+    $ErrorMessage = "Error: Unable to fetch signed in user details"
+    Write-Host –ForegroundColor Red $ErrorMessage
+    return
+}
+
 $Choice=Get-UserChoice
 if($Choice -eq 'Proceed') {
     
@@ -254,7 +261,7 @@ if($Choice -eq 'Proceed') {
             Write-Host "Executing Script to Send Chat Title $($Notification.Title)" -ForegroundColor Yellow
 
             Send-NotificationToGroupMembers -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
-            -GroupIds $Notification.ExoGroupIds -Notifier $Configuration.'teams.user.id' -Notification $Notification
+            -GroupIds $Notification.ExoGroupIds -Notifier $SignedInUser.id -Notification $Notification
 
             $DidWork = $true
         }
@@ -263,7 +270,7 @@ if($Choice -eq 'Proceed') {
             Write-Host "Executing Script to Send Card Title $($Notification.Title)" -ForegroundColor Yellow
 
             Send-NotificationToGroupMembers -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
-            -GroupIds $Notification.ExoGroupIds -Notifier $Configuration.'teams.user.id' -Notification $Notification
+            -GroupIds $Notification.ExoGroupIds -Notifier $SignedInUser.id -Notification $Notification
 
             $DidWork = $true
 
@@ -274,7 +281,7 @@ if($Choice -eq 'Proceed') {
             Write-Host "Executing Script to Send Reminder for Chat Title $($Notification.Title)" -ForegroundColor Yellow
 
             Send-Reminder -SpoContext $SpoContext -Config $Configuration -LogID $Notification.ID `
-            -Notifier $Configuration.'teams.user.id' -Notification $Notification
+            -Notifier $SignedInUser.id -Notification $Notification
 
             $DidWork = $true
         }

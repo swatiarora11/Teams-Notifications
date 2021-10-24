@@ -53,6 +53,25 @@ function Remove-Sessions() {
         write-host "Error: $($_.Exception.Message)" -Foregroundcolor Red
     }
 }
+
+# Function to Get Signed In User
+function Get-SignedInUser {
+    param (
+        $Header
+    )
+
+    try {
+        $URL = "https://graph.microsoft.com/v1.0/me"
+        $SignedInUser = Invoke-RestMethod -Uri $URL -Headers $Header -Method Get
+        return $SignedInUser
+
+    } catch {
+        write-host "Error: $($_.Exception.Message)" -Foregroundcolor Red
+    }
+
+    return $null
+}
+
 ###############################################################################################################################
 
 
