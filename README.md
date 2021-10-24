@@ -72,7 +72,7 @@ From Sharepoint Online, create a Team Site named as TeamNotification.
 Select Blank List.Enter the name of the List as Notification.
 
 2. Add the following coloumns in the list and select the type as shown below
-<p> <img src="images/sp_columnt_ypes.png"/>
+<p> <img src="images/sp_column_types.png"/>
 
 **Note**: Do not create columns with name ID,Title,Created by and Modified by as they exist by default in the list.
 <p> <img src="images/sp_list_column.png"/>
