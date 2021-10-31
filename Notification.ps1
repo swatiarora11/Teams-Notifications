@@ -64,13 +64,37 @@ function Send-NotificationToGroupMembers {
     ForEach ($GID in $GroupIds) 
     {
         $GID = $GID.Trim()
-        $Group = Get-UnifiedGroup –Identity $GID
-        Write-Host "Group Name   :" $Group.DisplayName 
-        Write-Host "Group Members:" $Group.GroupMemberCount 
-        Write-Host "Group Type   :" $Group.GroupType
+        $isDistributionGroup = $true
 
-        $GroupMembers = Get-UnifiedGroupLinks –Identity $GID –LinkType Members | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
-        @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}
+        $Group = Get-DistributionGroup –Identity $GID -ErrorAction 'SilentlyContinue'
+        if(-not $Group)
+        {
+            $isDistributionGroup = $false
+            $Group = Get-UnifiedGroup –Identity $GID -ErrorAction 'SilentlyContinue'
+            if(-not $Group) {
+                write-host "Group not supported: $GID" -Foregroundcolor Red
+                continue
+            }
+        }
+        
+        Write-Host "Group Name   :" $Group.DisplayName         
+        Write-Host "Group Type   :" $Group.GroupType
+        if($isDistributionGroup -eq $true) {     
+            Write-Host "Group Members:" (Get-DistributionGroupMember -Identity  $GID  | Measure-Object).Count
+        }
+        else {
+            Write-Host "Group Members:" $Group.GroupMemberCount
+        }
+
+        if($isDistributionGroup -eq $true) {     
+            $GroupMembers = Get-DistributionGroupMember -Identity  $GID | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
+            @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}
+
+        }
+        else {
+            $GroupMembers = Get-UnifiedGroupLinks –Identity $GID –LinkType Members | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
+            @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}
+        }
 
         #Do for each member of the group
         ForEach ($Member in $GroupMembers) 
