@@ -267,6 +267,15 @@ function Send-ChatCard {
     $Text = $Notification.Notification
     $ImageUrl = $Notification.CardPictureLink
 
+    if($ImageUrl) {
+        $CardContent = "{""title"": ""$Title"",""subtitle"": ""$SubTitle"",""images"": [{""url"":""$ImageUrl""}],""text"": ""$Text"", ""buttons"": [{""type"": ""openUrl"", ""title"": ""$ButtonLabel"", ""value"": ""$ButtonLink""}]}"
+    }
+    else {
+        $CardContent = "{""title"": ""$Title"",""subtitle"": ""$SubTitle"",""text"": ""$Text"", ""buttons"": [{""type"": ""openUrl"", ""title"": ""$ButtonLabel"", ""value"": ""$ButtonLink""}]}"
+    }
+
+    #'content': '{""title"": ""$Title"",""subtitle"": ""$SubTitle"",""images"": [{""url"":""$ImageUrl""}], ""text"": ""$Text"", ""buttons"": [{""type"": ""openUrl"", ""title"": ""$ButtonLabel"", ""value"": ""$ButtonLink""}]}',
+
     # Create body
     $Body = "
     {
@@ -279,7 +288,7 @@ function Send-ChatCard {
              'id': '(($AttachmentId))',
              'contentType': 'application/vnd.microsoft.card.thumbnail',
              'contentUrl': null,
-             'content': '{""title"": ""$Title"",""subtitle"": ""$SubTitle"",""images"": [{""url"":""$ImageUrl""}], ""text"": ""$Text"", ""buttons"": [{""type"": ""openUrl"", ""title"": ""$ButtonLabel"", ""value"": ""$ButtonLink""}]}',
+             'content': '$($CardContent)',
              'name': null,
              'thumbnailUrl': null
          }
