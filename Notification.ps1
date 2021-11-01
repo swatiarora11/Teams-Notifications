@@ -64,84 +64,99 @@ function Send-NotificationToGroupMembers {
     ForEach ($GID in $GroupIds) 
     {
         $GID = $GID.Trim()
-        $isDistributionGroup = $true
+        $GroupType = "DDLT"
 
-        $Group = Get-DistributionGroup –Identity $GID -ErrorAction 'SilentlyContinue'
-        if(-not $Group)
-        {
-            $isDistributionGroup = $false
-            $Group = Get-UnifiedGroup –Identity $GID -ErrorAction 'SilentlyContinue'
-            if(-not $Group) {
-                write-host "Group not supported: $GID" -Foregroundcolor Red
-                continue
+        $Group = Get-DynamicDistributionGroup –Identity $GID -ErrorAction 'SilentlyContinue'
+        if(-not $Group) {
+            $GroupType = "DLST"
+            $Group = Get-DistributionGroup –Identity $GID -ErrorAction 'SilentlyContinue'
+            if(-not $Group)
+            {
+                $GroupType = "M365"
+                $Group = Get-UnifiedGroup –Identity $GID -ErrorAction 'SilentlyContinue'
+                if(-not $Group) {
+                    write-host "Invalid Group Identity: $GID" -Foregroundcolor Red
+                    continue
+                }
             }
         }
         
         Write-Host "Group Name   :" $Group.DisplayName         
-        Write-Host "Group Type   :" $Group.GroupType
-        if($isDistributionGroup -eq $true) {     
+
+        if($GroupType -eq "DDLT") {
+            Write-Host "Group Members:" (Get-DynamicDistributionGroupMember -Identity  $GID  | Measure-Object).Count 
+            $GroupMembers = Get-DynamicDistributionGroupMember -Identity  $GID | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
+            @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}, @{Name="RecipientType";Expression={$_.RecipientType}}
+
+        } 
+        elseif($GroupType -eq "DLST") {   
+            Write-Host "Group Type   :" $Group.GroupType  
             Write-Host "Group Members:" (Get-DistributionGroupMember -Identity  $GID  | Measure-Object).Count
-        }
-        else {
-            Write-Host "Group Members:" $Group.GroupMemberCount
-        }
-
-        if($isDistributionGroup -eq $true) {     
             $GroupMembers = Get-DistributionGroupMember -Identity  $GID | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
-            @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}
-
+            @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}, @{Name="RecipientType";Expression={$_.RecipientType}}
         }
         else {
+            Write-Host "Group Type   :" $Group.GroupType
+            Write-Host "Group Members:" $Group.GroupMemberCount
             $GroupMembers = Get-UnifiedGroupLinks –Identity $GID –LinkType Members | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
-            @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}
+            @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}, @{Name="RecipientType";Expression={$_.RecipientType}}
+
         }
 
         #Do for each member of the group
         ForEach ($Member in $GroupMembers) 
         {
-            $User = $Member.UserId
-            if($Notifier -eq $User) { continue }
+            if($Member.RecipientType -eq "UserMailbox") {
+                $User = $Member.UserId
+                if($Notifier -eq $User) { continue }
 
-            #Create teams one on one chat
-            $NewOne2OneChatResponse = New-One2OneChat -Header $Header -Sender $Notifier -Recepient $User
-            if($NewOne2OneChatResponse['StatusCode']) {
-                Publish-Error -SC $NewOne2OneChatResponse['StatusCode'] -Member $Member -Message "Unable to create one2one chat to user" -Log $FLog
-                continue 
-            }
+                #Create teams one on one chat
+                $NewOne2OneChatResponse = New-One2OneChat -Header $Header -Sender $Notifier -Recepient $User
+                if($NewOne2OneChatResponse['StatusCode']) {
+                    Publish-Error -SC $NewOne2OneChatResponse['StatusCode'] -Member $Member -Message "Unable to create one2one chat to user" -Log $FLog
+                    continue 
+                }
   
-            if ($NewOne2OneChatResponse.id)
-            {
-                if($Notification.Action.Equals("Send Chat")) {
-                    #Send notification in teams chat
-                    $SendChatResponse = Send-Chat -Header $Header -ChatID $NewOne2OneChatResponse.id -Text $Notification.Notification
+                if ($NewOne2OneChatResponse.id)
+                {
+                    if($Notification.Action.Equals("Send Chat")) {
+                        #Send notification in teams chat
+                        $SendChatResponse = Send-Chat -Header $Header -ChatID $NewOne2OneChatResponse.id -Text $Notification.Notification
                
-                    if($SendChatResponse['StatusCode']) {
-                        Publish-Error -SC $SendChatResponse['StatusCode'] -Member $Member -Message "Unable to send one2one chat notification to user" -Log $FLog
-                        continue 
+                        if($SendChatResponse['StatusCode']) {
+                            Publish-Error -SC $SendChatResponse['StatusCode'] -Member $Member -Message "Unable to send one2one chat notification to user" -Log $FLog
+                            continue 
+                        }
+                    }
+                    elseif($Notification.Action.Equals("Send Card")) {
+                        #Send card in teams chat
+                        $SendCardResponse = Send-ChatCard -Header $Header -ChatID $NewOne2OneChatResponse.id -Notification $Notification
+               
+                        if($SendCardResponse['StatusCode']) {
+                            Publish-Error -SC $SendCardResponse['StatusCode'] -Member $Member -Message "Unable to send one2one chat card to user" -Log $FLog
+                            continue 
+                        }
                     }
                 }
-                elseif($Notification.Action.Equals("Send Card")) {
-                    #Send card in teams chat
-                    $SendCardResponse = Send-ChatCard -Header $Header -ChatID $NewOne2OneChatResponse.id -Notification $Notification
-               
-                    if($SendCardResponse['StatusCode']) {
-                        Publish-Error -SC $SendCardResponse['StatusCode'] -Member $Member -Message "Unable to send one2one chat card to user" -Log $FLog
-                        continue 
-                    }
-                }
+
+                $Table = @{}
+                $Table.Add('GroupName', $member.GroupName)
+                $Table.Add('UserName', $member.UserName)
+                $Table.Add('Email', $member.Email)
+                $Table.Add('UserId', $User)
+                $Table.Add('ChatId', $NewOne2OneChatResponse.id)
+                $Table.Add('MsgId', $SendChatResponse.id)
+
+                $GroupMember = New-Object -TypeName PSObject -Property $Table
+
+                Publish-Success -Member $GroupMember -Message "Notification sent to user" -Log $SLog
+
+                Start-Sleep -Seconds 1
+
             }
-
-            $Table = @{}
-            $Table.Add('GroupName', $member.GroupName)
-            $Table.Add('UserName', $member.UserName)
-            $Table.Add('Email', $member.Email)
-            $Table.Add('UserId', $User)
-            $Table.Add('ChatId', $NewOne2OneChatResponse.id)
-            $Table.Add('MsgId', $SendChatResponse.id)
-
-            $GroupMember = New-Object -TypeName PSObject -Property $Table
-
-            Publish-Success -Member $GroupMember -Message "Notification sent to user" -Log $SLog
+            else {
+                Write-Host "Skipping non user recipient: " $Member.Email -Foregroundcolor Yellow
+            }
         }
 
         Write-Host ""
