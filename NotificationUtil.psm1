@@ -102,7 +102,7 @@ function Publish-Error {
     $ErrorMessage = "Error($($SC)): $($Message) $($Member.Email)"
     Write-Host –ForegroundColor Red $ErrorMessage
 
-    $Member | Select-Object GroupName, UserName, Email | Export-CSV $Log -NoTypeInformation -Append
+    $Member | Select-Object GroupName, UserName, Email | Export-CSV $Log -NoTypeInformation -Append -Force
 }
 
 # Function To Publish Success
@@ -120,7 +120,7 @@ function Publish-Success {
         $Member | Select-Object GroupName, UserName, Email, UserId, ChatId, MsgId | Export-CSV $Log -NoTypeInformation -Append
     }
     else {
-        $Member | Select-Object GroupName, UserName, Email | Export-CSV $Log -NoTypeInformation -Append
+        $Member | Select-Object GroupName, UserName, Email | Export-CSV $Log -NoTypeInformation -Append -Force
     }
 }
 ###############################################################################################################################
@@ -209,7 +209,27 @@ function New-One2OneChat {
     } catch {
         $Response = @{
             StatusCode = $_.Exception.Response.StatusCode.value__;
-            StatusDescription = $_.Exception.Response.StatusDescription
+            StatusDescription = $_.Exception.Response.StatusDescription;
+            Headers = $_.Exception.Response.Headers
+        }
+    }
+
+    if($Response['StatusCode'] -eq 429) {
+
+        $SleepDuration = $Response.Headers["Retry-After"]-as[int]
+        $SleepDuration++ #add extra second for good luck
+
+        Write-Host –ForegroundColor Yellow "Too many requests. Waiting $($SleepDuration) seconds..." 
+        Start-Sleep -Seconds $SleepDuration
+
+        try {
+            # Invoke REST api to post chat
+            $Response = Invoke-RestMethod -Uri $URL -Headers $Header -Body $Body -Method Post -ContentType "application/json"
+        } catch {
+            $Response = @{
+                StatusCode = $_.Exception.Response.StatusCode.value__;
+                StatusDescription = $_.Exception.Response.StatusDescription;
+            }
         }
     }
 
@@ -241,7 +261,27 @@ function Send-Chat {
     } catch {       
         $Response = @{
             StatusCode = $_.Exception.Response.StatusCode.value__;
-            StatusDescription = $_.Exception.Response.StatusDescription
+            StatusDescription = $_.Exception.Response.StatusDescription;
+            Headers = $_.Exception.Response.Headers
+        }
+    }
+
+    if($Response['StatusCode'] -eq 429) {
+
+        $SleepDuration = $Response.Headers["Retry-After"]-as[int]
+        $SleepDuration++ #add extra second for good luck
+
+        Write-Host –ForegroundColor Yellow "Too many requests. Waiting $($SleepDuration) seconds..." 
+        Start-Sleep -Seconds $SleepDuration
+
+        try {
+            # Invoke REST api to post chat
+            $Response = Invoke-RestMethod -Uri $URL -Headers $Header -Body $Body -Method Post -ContentType "application/json"
+        } catch {
+            $Response = @{
+                StatusCode = $_.Exception.Response.StatusCode.value__;
+                StatusDescription = $_.Exception.Response.StatusDescription;
+            }
         }
     }
 
@@ -274,8 +314,6 @@ function Send-ChatCard {
         $CardContent = "{""title"": ""$Title"",""subtitle"": ""$SubTitle"",""text"": ""$Text"", ""buttons"": [{""type"": ""openUrl"", ""title"": ""$ButtonLabel"", ""value"": ""$ButtonLink""}]}"
     }
 
-    #'content': '{""title"": ""$Title"",""subtitle"": ""$SubTitle"",""images"": [{""url"":""$ImageUrl""}], ""text"": ""$Text"", ""buttons"": [{""type"": ""openUrl"", ""title"": ""$ButtonLabel"", ""value"": ""$ButtonLink""}]}',
-
     # Create body
     $Body = "
     {
@@ -301,7 +339,27 @@ function Send-ChatCard {
     } catch {       
         $Response = @{
             StatusCode = $_.Exception.Response.StatusCode.value__;
-            StatusDescription = $_.Exception.Response.StatusDescription
+            StatusDescription = $_.Exception.Response.StatusDescription;
+            Headers = $_.Exception.Response.Headers
+        }
+    }
+
+    if($Response['StatusCode'] -eq 429) {
+
+        $SleepDuration = $Response.Headers["Retry-After"]-as[int]
+        $SleepDuration++ #add extra second for good luck
+
+        Write-Host –ForegroundColor Yellow "Too many requests. Waiting $($SleepDuration) seconds..." 
+        Start-Sleep -Seconds $SleepDuration
+
+        try {
+            # Invoke REST api to post chat
+            $Response = Invoke-RestMethod -Uri $URL -Headers $Header -Body $Body -Method Post -ContentType "application/json"
+        } catch {
+            $Response = @{
+                StatusCode = $_.Exception.Response.StatusCode.value__;
+                StatusDescription = $_.Exception.Response.StatusDescription;
+            }
         }
     }
 
@@ -346,7 +404,27 @@ function Send-ChatActivityFeed {
     } catch {
         $Response = @{
             StatusCode = $_.Exception.Response.StatusCode.value__;
-            StatusDescription = $_.Exception.Response.StatusDescription
+            StatusDescription = $_.Exception.Response.StatusDescription;
+            Headers = $_.Exception.Response.Headers
+        }
+    }
+
+    if($Response['StatusCode'] -eq 429) {
+
+        $SleepDuration = $Response.Headers["Retry-After"]-as[int]
+        $SleepDuration++ #add extra second for good luck
+
+        Write-Host –ForegroundColor Yellow "Too many requests. Waiting $($SleepDuration) seconds..." 
+        Start-Sleep -Seconds $SleepDuration
+
+        try {
+            # Invoke REST api to post chat
+            $Response = Invoke-RestMethod -Uri $URL -Headers $Header -Body $Body -Method Post -ContentType "application/json"
+        } catch {
+            $Response = @{
+                StatusCode = $_.Exception.Response.StatusCode.value__;
+                StatusDescription = $_.Exception.Response.StatusDescription;
+            }
         }
     }
 

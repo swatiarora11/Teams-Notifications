@@ -84,21 +84,21 @@ function Send-NotificationToGroupMembers {
         Write-Host "Group Name   :" $Group.DisplayName         
 
         if($GroupType -eq "DDLT") {
-            Write-Host "Group Members:" (Get-DynamicDistributionGroupMember -Identity  $GID  | Measure-Object).Count 
+            Write-Host "Group Members:" (Get-DynamicDistributionGroupMember -Identity  $GID -ResultSize Unlimited  | Measure-Object).Count 
             $GroupMembers = Get-DynamicDistributionGroupMember -Identity  $GID | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
             @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}, @{Name="RecipientType";Expression={$_.RecipientType}}
 
         } 
         elseif($GroupType -eq "DLST") {   
             Write-Host "Group Type   :" $Group.GroupType  
-            Write-Host "Group Members:" (Get-DistributionGroupMember -Identity  $GID  | Measure-Object).Count
+            Write-Host "Group Members:" (Get-DistributionGroupMember -Identity  $GID -ResultSize Unlimited  | Measure-Object).Count
             $GroupMembers = Get-DistributionGroupMember -Identity  $GID | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
             @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}, @{Name="RecipientType";Expression={$_.RecipientType}}
         }
         else {
             Write-Host "Group Type   :" $Group.GroupType
             Write-Host "Group Members:" $Group.GroupMemberCount
-            $GroupMembers = Get-UnifiedGroupLinks –Identity $GID –LinkType Members | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
+            $GroupMembers = Get-UnifiedGroupLinks –Identity $GID –LinkType Members -ResultSize Unlimited | Select-Object @{Name="GroupName";Expression={$Group.DisplayName}},`
             @{Name="UserName";Expression={$_.DisplayName}}, @{Name="Email";Expression={$_.PrimarySmtpAddress}}, @{Name="UserId";Expression={$_.ExternalDirectoryObjectId}}, @{Name="RecipientType";Expression={$_.RecipientType}}
 
         }
@@ -151,7 +151,7 @@ function Send-NotificationToGroupMembers {
 
                 Publish-Success -Member $GroupMember -Message "Notification sent to user" -Log $SLog
 
-                Start-Sleep -Seconds 1
+                #Start-Sleep -Seconds 1
 
             }
             else {
